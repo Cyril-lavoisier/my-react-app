@@ -3,7 +3,6 @@ const UnauthorizedError = require("../../errors/unauthorized");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const usersService = require("./users.service");
-const articlesService = require("../articles/articles.services");
 
 class UsersController {
   async getAll(req, res, next) {
@@ -28,8 +27,7 @@ class UsersController {
   }
   async create(req, res, next) {
     try {
-      console.log('req.user => ', req.user)
-      const user = await usersService.create({...req.body, creator: req.user._id });
+      const user = await usersService.create(req.body);
       user.password = undefined;
       req.io.emit("user:create", user);
       res.status(201).json(user);
@@ -39,10 +37,6 @@ class UsersController {
   }
   async update(req, res, next) {
     try {
-      //console.log("req.user => ", req.user);
-      if(req.user.role !== 'admin') {
-        throw new UnauthorizedError()
-      }
       const id = req.params.id;
       const data = req.body;
       const userModified = await usersService.update(id, data);
@@ -52,23 +46,8 @@ class UsersController {
       next(err);
     }
   }
-  async getArticleFromUser(req, res, next) {
-    try {
-      qsdsqdqsdqds
-      const userId = req.params.userId;
-      const result = await articlesService.getArticleFromUser(userId);
-      console.log(result);
-      res.json(result);
-    } catch (err) {
-      next(err);
-    }
-  }
   async delete(req, res, next) {
     try {
-      //console.log("req.user => ", req.user);
-      if(req.user.role !== 'admin') {
-        throw new UnauthorizedError()
-      }
       const id = req.params.id;
       await usersService.delete(id);
       req.io.emit("user:delete", { id });

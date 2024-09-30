@@ -3,7 +3,8 @@ const ObjectId = require('mongodb').ObjectId;
 
 class ArticlesService {
   create(data) {
-    const article = new Article(data);
+    const article = new Article(data.body);
+    article.user = data.user;
     return article.save();
   }
   update(id, data) {

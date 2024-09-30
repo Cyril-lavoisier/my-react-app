@@ -5,7 +5,6 @@ const userService = require("../api/users/users.service")
 
 module.exports = async (req, res, next) => {
   try {
-    //console.log("req -> ", req );
     const token = req.headers["x-access-token"];
     if (!token) {
       throw "not token";

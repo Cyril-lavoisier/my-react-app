@@ -6,6 +6,8 @@ const NotFoundError = require("./errors/not-found");
 const userRouter = require("./api/users/users.router");
 const usersController = require("./api/users/users.controller");
 const authMiddleware = require("./middlewares/auth");
+const articleRouter = require("./api/articles/articles.router");
+const articlesController = require("./api/articles/articles.controller");
 require("./api/articles/articles.schema"); // temporaire
 const app = express();
 
@@ -28,9 +30,11 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/users/:userId/articles", usersController.getArticleFromUser);
+app.get("/api/users/:userId/articles", articlesController.getArticleFromUser);
 app.use("/api/users", authMiddleware, userRouter);
 app.post("/login", usersController.login);
+
+app.use("/api/articles", authMiddleware, articleRouter);
 
 app.use("/", express.static("public"));
 

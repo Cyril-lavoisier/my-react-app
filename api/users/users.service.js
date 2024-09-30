@@ -9,7 +9,6 @@ class UserService {
     return User.findById(id, "-password");
   }
   create(data) {
-    console.log(data);
     const user = new User(data);
     return user.save();
   }
